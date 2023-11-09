@@ -105,7 +105,6 @@ class StoresBrowser
       span = page_list[n].span(class: "text")
       text = span.inner_text if span.exists?
       text = page_list[n].img.attribute('alt') if page_list[n].img.exists?
-      binding.irb if text == nil
       page_rank[n] = {
         text: text,
         number: page_list[n].span(class: "count").inner_text,
@@ -125,7 +124,6 @@ class StoresBrowser
       }
     end
 
-    # 同じ名前の人の年齢を合算するためのハッシュを作成
     sum = {}
 
     page_rank.each do |item|
