@@ -117,10 +117,10 @@ class StoresBrowser
         .div(class: "analytics_data_list")
         .dls
 
-    (5..29).each_with_index do |n, i|
+    following_page_list.each_with_index do |following_page, i|
       page_rank[i + 4] = {
-        text: following_page_list[i].a.inner_text,
-        number: following_page_list[i].dd.inner_text,
+        text: following_page.a.inner_text,
+        number: following_page.dd.inner_text,
       }
     end
 
