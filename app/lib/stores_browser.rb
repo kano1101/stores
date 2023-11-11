@@ -10,6 +10,9 @@ class StoresBrowser
   PAGE_RANK_FILE = "csv/page_rank_file.csv"
   LINK_RANK_FILE = "csv/link_rank_file.csv"
 
+  def self.test()
+    CsvSaver.run(PAGE_RANK_FILE, {})
+  end
   def self.run()
     browser = self.login
 
@@ -18,21 +21,21 @@ class StoresBrowser
     self.scrape_summary(browser).each do |item|
       summary_data[item[:text]] = item[:number]
     end
-    CsvSaver.append(SUMMARY_FILE, summary_data)
+    CsvSaver.run(SUMMARY_FILE, summary_data)
 
     page_rank_data = {}
     page_rank_data["日付"] = Date.today()
     self.scrape_page_rank(browser).each do |key, value|
       page_rank_data[key] = value
     end
-    CsvSaver.append(PAGE_RANK_FILE, page_rank_data)
+    CsvSaver.run(PAGE_RANK_FILE, page_rank_data)
 
     link_rank_data = {}
     link_rank_data["日付"] = Date.today()
     self.scrape_link_rank(browser).each do |item|
       link_rank_data[item[:text]] = item[:number]
     end
-    CsvSaver.append(LINK_RANK_FILE, link_rank_data)
+    CsvSaver.run(LINK_RANK_FILE, link_rank_data)
 
     browser.close
     exit

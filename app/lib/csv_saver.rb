@@ -25,8 +25,40 @@ class CsvSaver
     end
   end
 
-  def self.append(filename, data)
+  # 同じ日付(先頭要素)が存在したらそのうち最終行のみ残す
+  def self.uniq(filename)
+    return unless File.exist?(filename)
+
+    csv_data = CSV.read(filename, headers: false)
+    header = csv_data.shift
+
+    # 先頭要素でグループ化し、各グループの最後の要素を取得
+    result =
+      csv_data
+        .group_by { |row| row.first } # 行頭が日付になっている
+        .transform_values(&:last)
+        .values
+
+    CSV.open(
+      filename,
+      'w',
+      write_headers: true,
+      headers: header
+    )  do |csv|
+    end
+    CSV.open(
+      filename,
+      'a',
+    ) do |csv|
+      result.each do |row|
+        csv << row
+      end
+    end
+  end
+
+  def self.append(filename, insert_row_data)
     file_exist = File.exist?(filename)
+
     # 既存の列名を取得
     existing_columns = []
     if file_exist
@@ -34,7 +66,7 @@ class CsvSaver
       existing_columns = csv.headers
     end
 
-    new_columns = data.keys.map(&:to_s)
+    new_columns = insert_row_data.keys.map(&:to_s)
     existing_columns.concat(new_columns).uniq!
 
     self.edit_header(filename, existing_columns)
@@ -46,7 +78,7 @@ class CsvSaver
     ) do |csv|
       row = {}
       existing_columns.each do |key|
-        data.each do |item|
+        insert_row_data.each do |item|
           if item[0] == key
             row[key] = item[1]
           else
@@ -56,6 +88,10 @@ class CsvSaver
       end
       csv << row
     end
+  end
+  def self.run(filename, insert_row_data)
+    self.append(filename, insert_row_data)
+    self.uniq(filename)
   end
   def self.test()
     data1 = {"a" => "1", "b" => "3", "c" => "4"}
