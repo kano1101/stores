@@ -3,6 +3,7 @@ source "https://rubygems.org"
 ruby "3.2.0"
 
 # Custom
+gem "bigdecimal"
 gem "dotenv-rails"
 gem "watir", "~> 7.3"
 gem 'whenever', require: false
@@ -20,11 +21,13 @@ gem "sqlite3", "~> 1.4"
 gem "puma", ">= 5.0"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+# gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[ mswin mingw ]
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
+#   gem "debug", platforms: %i[ mri windows ]
+  gem "debug", platforms: %i[ mri mswin mingw ]
 end
 
 group :development do

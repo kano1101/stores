@@ -42,22 +42,30 @@ class StoresBrowser
   end
 
   def self.login()
-    browser = Watir::Browser.new :chrome
+    # Google Chromeへのパスを指定
+    chrome_path = '/opt/google/chrome/google-chrome'
+    # WatirでGoogle Chromeを起動
+    browser = Watir::Browser.new(
+      :chrome,
+      options: {
+        binary: chrome_path,
+        args: %w[--headless --disable-gpu],
+      }
+    )
     browser.goto(LOGIN_URL)
     browser.text_field(id: 'email').set(ENV['STORES_USERNAME'])
     browser.wait
     browser.text_field(id: 'current-password').set(ENV['STORES_PASSWORD'])
     browser.wait
     browser.button(value: 'ログイン', data_testid: 'login-button').click
-    browser.wait
+    browser.wait_until { browser.title == 'ホーム - STORES' }
     browser.goto(DASHBOARD_URL)
-    browser.wait
+    browser.wait_until { browser.title == 'アクセス解析 - STORES ダッシュボード' }
+    p browser.title
     browser
   end
 
   def self.scrape_summary(browser)
-    browser.goto(DASHBOARD_URL)
-    browser.wait
     page_view = browser.sections[0].p(class: "num").inner_text
     page_view_diff = browser.sections[0].p(class: "diff").span.inner_text
     visitor = browser.sections[1].p(class: "num").inner_text
@@ -94,8 +102,6 @@ class StoresBrowser
   end
 
   def self.scrape_page_rank(browser)
-    browser.goto(DASHBOARD_URL)
-    browser.wait
     page_rank = []
     link = []
 
@@ -145,23 +151,18 @@ class StoresBrowser
   end
 
   def self.scrape_link_rank(browser)
-    browser.goto(DASHBOARD_URL)
-    browser.wait
     link_rank = []
-
     link_list =
       browser
         .div(class: "analytics_column")
         .ul(class: "referrer_list")
         .lis(class: "referrer")
-
     (1..10).each_with_index do |_, i|
       link_rank[i] = {
         text: link_list[i].p(class: "name").inner_text,
         number: link_list[i].p(class: "count").inner_text,
       }
     end
-
     result = link_rank
     result
   end
