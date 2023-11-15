@@ -46,7 +46,7 @@ class StoresBrowser
     exit
   end
 
-  def self.browser()
+  def self.browser_new()
     # Google Chromeへのパスを指定
     chrome_path = '/opt/google/chrome/google-chrome'
     # WatirでGoogle Chromeを起動
