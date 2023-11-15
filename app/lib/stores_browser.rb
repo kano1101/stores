@@ -10,12 +10,17 @@ class StoresBrowser
   PAGE_RANK_FILE = "csv/page_rank_file.csv"
   LINK_RANK_FILE = "csv/link_rank_file.csv"
 
-  def self.test()
-    CsvSaver.run(PAGE_RANK_FILE, {})
-  end
   def self.run()
-    browser = self.login
-
+    browser = self.browser_new()
+    self.login(browser)
+    self.scrape_and_save_csv(browser)
+  end
+  def self.run_on_mac()
+    browser = self.browser_new_on_mac()
+    self.login(browser)
+    self.scrape_and_save_csv(browser)
+  end
+  def self.scrape_and_save_csv(browser)
     summary_data = {}
     summary_data["日付"] = Date.today()
     self.scrape_summary(browser).each do |item|
@@ -41,7 +46,7 @@ class StoresBrowser
     exit
   end
 
-  def self.login()
+  def self.browser()
     # Google Chromeへのパスを指定
     chrome_path = '/opt/google/chrome/google-chrome'
     # WatirでGoogle Chromeを起動
@@ -52,15 +57,32 @@ class StoresBrowser
         args: %w[--headless --disable-gpu],
       }
     )
+    browser
+  end
+  def self.browser_new_on_mac()
+    # Google Chromeへのパスを指定
+    chrome_path = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    # WatirでGoogle Chromeを起動
+    browser = Watir::Browser.new(
+      :chrome,
+      options: {
+        binary: chrome_path,
+        args: %w[--headless --disable-gpu],
+      }
+    )
+    browser
+  end
+
+  def self.login(browser)
     browser.goto(LOGIN_URL)
     browser.text_field(id: 'email').set(ENV['STORES_USERNAME'])
     browser.wait
     browser.text_field(id: 'current-password').set(ENV['STORES_PASSWORD'])
     browser.wait
     browser.button(value: 'ログイン', data_testid: 'login-button').click
-    browser.wait_until { browser.title == 'ホーム - STORES' }
+    browser.wait_until { browser.title.start_with?('ホーム - STORES') }
     browser.goto(DASHBOARD_URL)
-    browser.wait_until { browser.title == 'アクセス解析 - STORES ダッシュボード' }
+    browser.wait_until { browser.title.start_with?('アクセス解析 - STORES') }
     p browser.title
     browser
   end
