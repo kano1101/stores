@@ -101,6 +101,7 @@ GEM
     irb (1.9.0)
       rdoc
       reline (>= 0.3.8)
+    kgio (2.11.4)
     loofah (2.21.4)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -169,6 +170,7 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
+    raindrops (0.20.1)
     rake (13.1.0)
     rdoc (6.6.0)
       psych (>= 4.0.0)
@@ -196,6 +198,9 @@ GEM
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    unicorn (6.1.0)
+      kgio (~> 2.6)
+      raindrops (~> 0.7)
     watir (7.3.0)
       regexp_parser (>= 1.2, < 3)
       selenium-webdriver (~> 4.2)
@@ -217,10 +222,10 @@ DEPENDENCIES
   dotenv-rails
   puma (>= 5.0)
   rails (~> 7.1.1)
-  rubyzip
   sprockets-rails
   sqlite3 (~> 1.4)
   tzinfo-data
+  unicorn
   watir (~> 7.3)
   whenever
 
