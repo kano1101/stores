@@ -213,11 +213,11 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bigdecimal
   debug
   dotenv-rails
   puma (>= 5.0)
   rails (~> 7.1.1)
+  rubyzip
   sprockets-rails
   sqlite3 (~> 1.4)
   tzinfo-data
