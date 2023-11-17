@@ -3,7 +3,6 @@ source "https://rubygems.org"
 ruby "3.2.0"
 
 # Custom
-gem "bigdecimal"
 gem "dotenv-rails"
 gem "watir", "~> 7.3"
 gem "unicorn"
